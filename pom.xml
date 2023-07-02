@@ -1135,7 +1135,7 @@
     <dependency>
       <groupId>org.apache.skywalking</groupId>
       <artifactId>apm-toolkit-trace</artifactId>
-      <version>8.1.0</version>
+      <version>8.16.0</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
