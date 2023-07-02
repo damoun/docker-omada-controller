@@ -1795,7 +1795,7 @@
     <dependency>
       <groupId>org.apache.xmlgraphics</groupId>
       <artifactId>batik-ext</artifactId>
-      <version>1.14</version>
+      <version>1.16</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
