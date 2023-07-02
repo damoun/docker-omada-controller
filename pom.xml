@@ -13,7 +13,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-quartz</artifactId>
-      <version>2.6.6</version>
+      <version>3.1.1</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
@@ -365,7 +365,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-actuator</artifactId>
-      <version>2.6.6</version>
+      <version>3.1.1</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
@@ -453,7 +453,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-aop</artifactId>
-      <version>2.6.6</version>
+      <version>3.1.1</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
@@ -508,7 +508,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-configuration-processor</artifactId>
-      <version>2.6.6</version>
+      <version>3.1.1</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
@@ -552,7 +552,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
-      <version>2.6.6</version>
+      <version>3.1.1</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
@@ -651,7 +651,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-tomcat</artifactId>
-      <version>2.6.6</version>
+      <version>3.1.1</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
@@ -717,7 +717,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter</artifactId>
-      <version>2.6.6</version>
+      <version>3.1.1</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
@@ -1113,7 +1113,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-actuator</artifactId>
-      <version>2.6.6</version>
+      <version>3.1.1</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
@@ -1311,7 +1311,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-freemarker</artifactId>
-      <version>2.6.6</version>
+      <version>3.1.1</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
@@ -1399,7 +1399,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-mongodb</artifactId>
-      <version>2.6.6</version>
+      <version>3.1.1</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
@@ -1432,7 +1432,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot</artifactId>
-      <version>2.6.6</version>
+      <version>3.1.1</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
@@ -1575,7 +1575,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-log4j2</artifactId>
-      <version>2.6.6</version>
+      <version>3.1.1</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
@@ -2367,7 +2367,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-json</artifactId>
-      <version>2.6.6</version>
+      <version>3.1.1</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
