@@ -1256,7 +1256,7 @@
     <dependency>
       <groupId>org.apache.xmlgraphics</groupId>
       <artifactId>batik-parser</artifactId>
-      <version>1.14</version>
+      <version>1.16</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
