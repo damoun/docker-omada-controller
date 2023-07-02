@@ -1597,7 +1597,7 @@
     <dependency>
       <groupId>org.apache.xmlgraphics</groupId>
       <artifactId>batik-swing</artifactId>
-      <version>1.14</version>
+      <version>1.16</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
