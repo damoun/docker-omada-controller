@@ -1641,7 +1641,7 @@
     <dependency>
       <groupId>ognl</groupId>
       <artifactId>ognl</artifactId>
-      <version>3.1.26</version>
+      <version>3.3.4</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
