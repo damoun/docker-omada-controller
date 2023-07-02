@@ -948,7 +948,7 @@
     <dependency>
       <groupId>io.prometheus</groupId>
       <artifactId>simpleclient_tracer_otel</artifactId>
-      <version>0.12.0</version>
+      <version>0.16.0</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
