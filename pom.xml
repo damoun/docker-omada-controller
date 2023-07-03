@@ -992,7 +992,7 @@
     <dependency>
       <groupId>org.checkerframework</groupId>
       <artifactId>checker-qual</artifactId>
-      <version>2.11.1</version>
+      <version>3.36.0</version>
       <exclusions>
         <exclusion>
           <groupId>*</groupId>
