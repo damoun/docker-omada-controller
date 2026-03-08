@@ -6,12 +6,13 @@
 set -euo pipefail
 
 url_encode() {
-  python3 -c "
-import urllib.parse, sys
-u = sys.argv[1]
+  INPUT_URL="$1" python3 -c "
+import os, urllib.parse
+u = os.environ['INPUT_URL']
 p = urllib.parse.urlsplit(u)
-print(urllib.parse.urlunsplit(p._replace(path=urllib.parse.quote(p.path, safe='/:@!\$&\'()*+,;='))))
-" "$1"
+safe = '/:@!\$&()*+,;='
+print(urllib.parse.urlunsplit(p._replace(path=urllib.parse.quote(p.path, safe=safe))))
+"
 }
 
 SUPPORT_URL="https://support.omadanetworks.com/us/download/software/omada-controller/"
@@ -38,10 +39,10 @@ fi
 
 # Find Linux-specific PDF in the same date directory as the tar.gz
 date_dir=$(echo "$download_url" | grep -oE 'upload/software/[0-9]+/[0-9]+/[0-9]+/')
-release_notes_url=$(echo "$html" | grep -oE "href=\"https://static\\.tp-link\\.com/${date_dir}[^\"]+[Ll]inux[^\"]+\\.pdf\"" | head -1 | sed 's/href="//; s/"$//; s/&amp;/\&/g; s/ /%20/g')
+release_notes_url=$(echo "$html" | grep -oE "href=\"https://static\\.tp-link\\.com/${date_dir}[^\"]+[Ll]inux[^\"]+\\.pdf\"" | head -1 | sed 's/href="//; s/"$//; s/&amp;/\&/g; s/ /%20/g' || true)
 # Fall back to any PDF in the same directory
 if [[ -z "$release_notes_url" ]]; then
-  release_notes_url=$(echo "$html" | grep -oE "href=\"https://static\\.tp-link\\.com/${date_dir}[^\"]+\\.pdf\"" | head -1 | sed 's/href="//; s/"$//; s/&amp;/\&/g; s/ /%20/g')
+  release_notes_url=$(echo "$html" | grep -oE "href=\"https://static\\.tp-link\\.com/${date_dir}[^\"]+\\.pdf\"" | head -1 | sed 's/href="//; s/"$//; s/&amp;/\&/g; s/ /%20/g' || true)
 fi
 
 echo "version=$version" >> "$GITHUB_OUTPUT"
