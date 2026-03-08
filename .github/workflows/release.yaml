@@ -80,7 +80,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}"
-          git add lib/ pom.xml
+          git add lib/ pom.xml properties/ data/
           git commit -m "chore: upgrade omada-controller to ${NEW_VERSION}"
           git tag "v${NEW_VERSION}"
           git push origin main
