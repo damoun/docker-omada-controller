@@ -101,7 +101,7 @@ jobs:
           release_body=""
           if [[ -f release-notes.pdf ]]; then
             sudo apt-get install -qq -y poppler-utils
-            release_body=$(pdftotext release-notes.pdf - 2>/dev/null | head -200 || true)
+            release_body=$(pdftotext release-notes.pdf - 2>/dev/null | python3 scripts/format-release-notes.py || true)
           fi
           if [[ -z "$release_body" ]]; then
             release_body="Omada Controller ${NEW_VERSION} release."
