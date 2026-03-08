@@ -18,6 +18,7 @@ jobs:
     outputs:
       version: ${{ steps.check.outputs.version }}
       skip: ${{ steps.version_check.outputs.skip }}
+      is_latest: ${{ steps.is_latest.outputs.value }}
 
     steps:
       - name: Checkout repository
@@ -43,6 +44,18 @@ jobs:
             echo "skip=true" >> "$GITHUB_OUTPUT"
           else
             echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Check if this is the latest version
+        id: is_latest
+        env:
+          NEW_VERSION: ${{ steps.check.outputs.version }}
+        run: |
+          latest_version=$(curl -fsSL https://support.omadanetworks.com/us/download/software/omada-controller/             | grep -oE 'href="https://static\.tp-link\.com/upload/software/[^"]+_linux_x64_[^"]+\.tar\.gz"'             | head -1 | grep -oE 'v[0-9]+(\.[0-9]+)+' | head -1 | tr -d v || true)
+          if [[ "$NEW_VERSION" == "$latest_version" ]]; then
+            echo "value=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=false" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Download Omada tarball
@@ -132,6 +145,7 @@ jobs:
     uses: ./.github/workflows/docker.yaml
     with:
       version: ${{ needs.release.outputs.version }}
+      latest: ${{ needs.release.outputs.is_latest == 'true' }}
     permissions:
       contents: read
       packages: write

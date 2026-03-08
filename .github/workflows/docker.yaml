@@ -10,6 +10,11 @@ on:
         description: 'Version tag to build (e.g. 5.15.24.18)'
         required: true
         type: string
+      latest:
+        description: 'Also tag as latest'
+        required: false
+        type: boolean
+        default: false
 
 env:
   REGISTRY: ghcr.io
@@ -45,6 +50,7 @@ jobs:
             type=ref,event=branch
             type=ref,event=tag
             type=raw,value=${{ inputs.version }},enable=${{ inputs.version != '' }}
+            type=raw,value=latest,enable=${{ inputs.latest == true }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@eafaea8d0f5853934deece2ffa67af59d936562b
