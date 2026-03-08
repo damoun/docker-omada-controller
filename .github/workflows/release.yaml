@@ -19,7 +19,9 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
 
       - name: Check latest version
         id: check
@@ -29,8 +31,10 @@ jobs:
       - name: Use provided download URL
         id: provided
         if: ${{ inputs.download_url != '' }}
+        env:
+          INPUT_DOWNLOAD_URL: ${{ inputs.download_url }}
         run: |
-          url="${{ inputs.download_url }}"
+          url="$INPUT_DOWNLOAD_URL"
           version=$(echo "$url" | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' | head -1 | tr -d 'v')
           echo "version=$version" >> "$GITHUB_OUTPUT"
           echo "download_url=$url" >> "$GITHUB_OUTPUT"
@@ -38,25 +42,33 @@ jobs:
 
       - name: Resolve version and URL
         id: resolved
+        env:
+          INPUT_DOWNLOAD_URL: ${{ inputs.download_url }}
+          PROVIDED_VERSION: ${{ steps.provided.outputs.version }}
+          PROVIDED_DOWNLOAD_URL: ${{ steps.provided.outputs.download_url }}
+          CHECK_VERSION: ${{ steps.check.outputs.version }}
+          CHECK_DOWNLOAD_URL: ${{ steps.check.outputs.download_url }}
+          CHECK_RELEASE_NOTES_URL: ${{ steps.check.outputs.release_notes_url }}
         run: |
-          if [[ -n "${{ inputs.download_url }}" ]]; then
-            echo "version=${{ steps.provided.outputs.version }}" >> "$GITHUB_OUTPUT"
-            echo "download_url=${{ steps.provided.outputs.download_url }}" >> "$GITHUB_OUTPUT"
+          if [[ -n "$INPUT_DOWNLOAD_URL" ]]; then
+            echo "version=$PROVIDED_VERSION" >> "$GITHUB_OUTPUT"
+            echo "download_url=$PROVIDED_DOWNLOAD_URL" >> "$GITHUB_OUTPUT"
             echo "release_notes_url=" >> "$GITHUB_OUTPUT"
           else
-            echo "version=${{ steps.check.outputs.version }}" >> "$GITHUB_OUTPUT"
-            echo "download_url=${{ steps.check.outputs.download_url }}" >> "$GITHUB_OUTPUT"
-            echo "release_notes_url=${{ steps.check.outputs.release_notes_url }}" >> "$GITHUB_OUTPUT"
+            echo "version=$CHECK_VERSION" >> "$GITHUB_OUTPUT"
+            echo "download_url=$CHECK_DOWNLOAD_URL" >> "$GITHUB_OUTPUT"
+            echo "release_notes_url=$CHECK_RELEASE_NOTES_URL" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Check if version already released
         id: version_check
+        env:
+          NEW_VERSION: ${{ steps.resolved.outputs.version }}
         run: |
           current_version=$(sed -n '9p' pom.xml | grep -oE '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+')
-          new_version="${{ steps.resolved.outputs.version }}"
           echo "current_version=$current_version"
-          echo "new_version=$new_version"
-          if [[ "$current_version" == "$new_version" ]]; then
+          echo "new_version=$NEW_VERSION"
+          if [[ "$current_version" == "$NEW_VERSION" ]]; then
             echo "skip=true" >> "$GITHUB_OUTPUT"
           else
             echo "skip=false" >> "$GITHUB_OUTPUT"
@@ -64,8 +76,10 @@ jobs:
 
       - name: Download Omada tarball
         if: steps.version_check.outputs.skip == 'false'
+        env:
+          DOWNLOAD_URL: ${{ steps.resolved.outputs.download_url }}
         run: |
-          curl -fsSL -o omada.tar.gz "${{ steps.resolved.outputs.download_url }}"
+          curl -fsSL -o omada.tar.gz "$DOWNLOAD_URL"
 
       - name: Extract JARs
         if: steps.version_check.outputs.skip == 'false'
@@ -83,30 +97,38 @@ jobs:
 
       - name: Update version in pom.xml
         if: steps.version_check.outputs.skip == 'false'
+        env:
+          NEW_VERSION: ${{ steps.resolved.outputs.version }}
         run: |
-          new_version="${{ steps.resolved.outputs.version }}"
-          sed -i "9s|<version>.*</version>|<version>${new_version}</version>|" pom.xml
+          sed -i "9s|<version>.*</version>|<version>${NEW_VERSION}</version>|" pom.xml
 
       - name: Commit and tag
         if: steps.version_check.outputs.skip == 'false'
+        env:
+          NEW_VERSION: ${{ steps.resolved.outputs.version }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          new_version="${{ steps.resolved.outputs.version }}"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}"
           git add lib/ pom.xml
-          git commit -m "chore: upgrade omada-controller to ${new_version}"
-          git tag "v${new_version}"
+          git commit -m "chore: upgrade omada-controller to ${NEW_VERSION}"
+          git tag "v${NEW_VERSION}"
           git push origin main
-          git push origin "v${new_version}"
+          git push origin "v${NEW_VERSION}"
 
       - name: Download release notes PDF
         if: steps.version_check.outputs.skip == 'false' && steps.resolved.outputs.release_notes_url != ''
+        env:
+          RELEASE_NOTES_URL: ${{ steps.resolved.outputs.release_notes_url }}
         run: |
-          curl -fsSL -o release-notes.pdf "${{ steps.resolved.outputs.release_notes_url }}"
+          curl -fsSL -o release-notes.pdf "$RELEASE_NOTES_URL"
 
       - name: Extract release notes text
         if: steps.version_check.outputs.skip == 'false'
         id: notes
+        env:
+          NEW_VERSION: ${{ steps.resolved.outputs.version }}
         run: |
           release_body=""
           if [[ -f release-notes.pdf ]]; then
@@ -114,23 +136,22 @@ jobs:
             release_body=$(pdftotext release-notes.pdf - 2>/dev/null | head -200 || true)
           fi
           if [[ -z "$release_body" ]]; then
-            release_body="Omada Controller ${{ steps.resolved.outputs.version }} release."
+            release_body="Omada Controller ${NEW_VERSION} release."
           fi
-          # Write to file to avoid quoting issues
           echo "$release_body" > release_body.txt
 
       - name: Create GitHub release
         if: steps.version_check.outputs.skip == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NEW_VERSION: ${{ steps.resolved.outputs.version }}
         run: |
-          new_version="${{ steps.resolved.outputs.version }}"
           args=(
-            "v${new_version}"
-            --title "v${new_version}"
+            "v${NEW_VERSION}"
+            --title "v${NEW_VERSION}"
             --notes-file release_body.txt
           )
           if [[ -f release-notes.pdf ]]; then
             args+=(release-notes.pdf)
           fi
           gh release create "${args[@]}"
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
