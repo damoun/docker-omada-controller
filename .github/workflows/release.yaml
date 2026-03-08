@@ -1,0 +1,157 @@
+name: release
+
+on:
+  schedule:
+    - cron: '0 6 1 * *'
+  workflow_dispatch:
+    inputs:
+      download_url:
+        description: 'Direct download URL for Omada tar.gz (optional)'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+
+      - name: Check latest version
+        id: check
+        if: ${{ inputs.download_url == '' }}
+        run: bash scripts/check-latest-version.sh
+
+      - name: Use provided download URL
+        id: provided
+        if: ${{ inputs.download_url != '' }}
+        env:
+          INPUT_DOWNLOAD_URL: ${{ inputs.download_url }}
+        run: |
+          url="$INPUT_DOWNLOAD_URL"
+          version=$(echo "$url" | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' | head -1 | tr -d 'v')
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "download_url=$url" >> "$GITHUB_OUTPUT"
+          echo "release_notes_url=" >> "$GITHUB_OUTPUT"
+
+      - name: Resolve version and URL
+        id: resolved
+        env:
+          INPUT_DOWNLOAD_URL: ${{ inputs.download_url }}
+          PROVIDED_VERSION: ${{ steps.provided.outputs.version }}
+          PROVIDED_DOWNLOAD_URL: ${{ steps.provided.outputs.download_url }}
+          CHECK_VERSION: ${{ steps.check.outputs.version }}
+          CHECK_DOWNLOAD_URL: ${{ steps.check.outputs.download_url }}
+          CHECK_RELEASE_NOTES_URL: ${{ steps.check.outputs.release_notes_url }}
+        run: |
+          if [[ -n "$INPUT_DOWNLOAD_URL" ]]; then
+            echo "version=$PROVIDED_VERSION" >> "$GITHUB_OUTPUT"
+            echo "download_url=$PROVIDED_DOWNLOAD_URL" >> "$GITHUB_OUTPUT"
+            echo "release_notes_url=" >> "$GITHUB_OUTPUT"
+          else
+            echo "version=$CHECK_VERSION" >> "$GITHUB_OUTPUT"
+            echo "download_url=$CHECK_DOWNLOAD_URL" >> "$GITHUB_OUTPUT"
+            echo "release_notes_url=$CHECK_RELEASE_NOTES_URL" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Check if version already released
+        id: version_check
+        env:
+          NEW_VERSION: ${{ steps.resolved.outputs.version }}
+        run: |
+          current_version=$(sed -n '9p' pom.xml | grep -oE '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+')
+          echo "current_version=$current_version"
+          echo "new_version=$NEW_VERSION"
+          if [[ "$current_version" == "$NEW_VERSION" ]]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Download Omada tarball
+        if: steps.version_check.outputs.skip == 'false'
+        env:
+          DOWNLOAD_URL: ${{ steps.resolved.outputs.download_url }}
+        run: |
+          curl -fsSL -o omada.tar.gz "$DOWNLOAD_URL"
+
+      - name: Extract JARs
+        if: steps.version_check.outputs.skip == 'false'
+        run: |
+          bash scripts/extract-omada.sh omada.tar.gz extracted-jars
+
+      - name: Sync deps (Maven Central → pom.xml, proprietary → lib/)
+        if: steps.version_check.outputs.skip == 'false'
+        run: |
+          bash scripts/sync-deps.sh extracted-jars/
+          rm -f lib/*.jar
+          while IFS= read -r jar_path; do
+            cp "$jar_path" lib/
+          done < lib-keep.txt
+
+      - name: Update version in pom.xml
+        if: steps.version_check.outputs.skip == 'false'
+        env:
+          NEW_VERSION: ${{ steps.resolved.outputs.version }}
+        run: |
+          sed -i "9s|<version>.*</version>|<version>${NEW_VERSION}</version>|" pom.xml
+
+      - name: Commit and tag
+        if: steps.version_check.outputs.skip == 'false'
+        env:
+          NEW_VERSION: ${{ steps.resolved.outputs.version }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}"
+          git add lib/ pom.xml
+          git commit -m "chore: upgrade omada-controller to ${NEW_VERSION}"
+          git tag "v${NEW_VERSION}"
+          git push origin main
+          git push origin "v${NEW_VERSION}"
+
+      - name: Download release notes PDF
+        if: steps.version_check.outputs.skip == 'false' && steps.resolved.outputs.release_notes_url != ''
+        env:
+          RELEASE_NOTES_URL: ${{ steps.resolved.outputs.release_notes_url }}
+        run: |
+          curl -fsSL -o release-notes.pdf "$RELEASE_NOTES_URL"
+
+      - name: Extract release notes text
+        if: steps.version_check.outputs.skip == 'false'
+        id: notes
+        env:
+          NEW_VERSION: ${{ steps.resolved.outputs.version }}
+        run: |
+          release_body=""
+          if [[ -f release-notes.pdf ]]; then
+            sudo apt-get install -qq -y poppler-utils
+            release_body=$(pdftotext release-notes.pdf - 2>/dev/null | head -200 || true)
+          fi
+          if [[ -z "$release_body" ]]; then
+            release_body="Omada Controller ${NEW_VERSION} release."
+          fi
+          echo "$release_body" > release_body.txt
+
+      - name: Create GitHub release
+        if: steps.version_check.outputs.skip == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NEW_VERSION: ${{ steps.resolved.outputs.version }}
+        run: |
+          args=(
+            "v${NEW_VERSION}"
+            --title "v${NEW_VERSION}"
+            --notes-file release_body.txt
+          )
+          if [[ -f release-notes.pdf ]]; then
+            args+=(release-notes.pdf)
+          fi
+          gh release create "${args[@]}"
