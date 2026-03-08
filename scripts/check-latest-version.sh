@@ -11,7 +11,7 @@ if [[ -z "$download_url" ]]; then
   exit 1
 fi
 
-release_notes_url=$(echo "$html" | grep -oE 'https://static\.tp-link\.com/upload/software/[^"]+\.pdf' | head -1)
+release_notes_url=$(echo "$html" | grep -oE 'href="https://static\.tp-link\.com/upload/software/[^"]+\.pdf"' | head -1 | sed 's/href="//; s/"$//; s/&amp;/\&/g; s/ /%20/g')
 
 # Extract version from filename e.g. Omada_Network_Application_v6.1.0.19_linux_x64_...
 version=$(echo "$download_url" | grep -oE 'v[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' | head -1 | tr -d 'v')
