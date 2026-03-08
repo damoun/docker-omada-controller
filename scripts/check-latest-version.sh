@@ -5,18 +5,28 @@
 # Outputs to $GITHUB_OUTPUT: version, download_url, release_notes_url
 set -euo pipefail
 
+url_encode() {
+  python3 -c "
+import urllib.parse, sys
+u = sys.argv[1]
+p = urllib.parse.urlsplit(u)
+print(urllib.parse.urlunsplit(p._replace(path=urllib.parse.quote(p.path, safe='/:@!\$&\'()*+,;='))))
+" "$1"
+}
+
 SUPPORT_URL="https://support.omadanetworks.com/us/download/software/omada-controller/"
 
 html=$(curl -fsSL "$SUPPORT_URL")
 
 if [[ -n "${1:-}" ]]; then
-  download_url="$1"
+  download_url=$(url_encode "$1")
 else
-  download_url=$(echo "$html" | grep -oE 'https://static\.tp-link\.com/upload/software/[^"]+_linux_x64_[^"]+\.tar\.gz' | head -1)
-  if [[ -z "$download_url" ]]; then
+  raw_url=$(echo "$html" | grep -oE 'href="https://static\.tp-link\.com/upload/software/[^"]+_linux_x64_[^"]+\.tar\.gz"' | head -1 | sed 's/href="//; s/"$//')
+  if [[ -z "$raw_url" ]]; then
     echo "ERROR: could not find linux tar.gz download URL" >&2
     exit 1
   fi
+  download_url=$(url_encode "$raw_url")
 fi
 
 # Extract version from filename e.g. Omada_SDN_Controller_v5.15.20.20_linux_x64_...
