@@ -6,6 +6,9 @@ services:
     environment:
       - MONGO_URL=mongodb://mongo:27017/omada
       - OMADA_PORT_DISCOVERY=30001
+    cap_add:
+      - NET_RAW
+      - NET_BIND_SERVICE
     ports:
       - 8088:8088
       - 8043:8043
