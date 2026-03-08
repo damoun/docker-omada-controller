@@ -1,7 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version='1.0' encoding='UTF-8'?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.tplink.smb.omada</groupId>
@@ -2078,7 +2076,7 @@
         </exclusion>
       </exclusions>
     </dependency>
-    <!-- log4j2 2.24.3 (replaces lib/ log4j-*.jar) -->
+    
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-api</artifactId>
@@ -2103,7 +2101,7 @@
       <version>2.24.3</version>
       <exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions>
     </dependency>
-    <!-- tomcat 9.0.102 (replaces lib/ tomcat-embed-*.jar) -->
+    
     <dependency>
       <groupId>org.apache.tomcat.embed</groupId>
       <artifactId>tomcat-embed-core</artifactId>
@@ -2134,35 +2132,35 @@
       <version>9.0.102</version>
       <exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions>
     </dependency>
-    <!-- commons-compress 1.27.1 -->
+    
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-compress</artifactId>
       <version>1.27.1</version>
       <exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions>
     </dependency>
-    <!-- commons-codec 1.17.1 -->
+    
     <dependency>
       <groupId>commons-codec</groupId>
       <artifactId>commons-codec</artifactId>
       <version>1.17.1</version>
       <exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions>
     </dependency>
-    <!-- OWASP encoder 1.3.1 -->
+    
     <dependency>
       <groupId>org.owasp.encoder</groupId>
       <artifactId>encoder</artifactId>
       <version>1.3.1</version>
       <exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions>
     </dependency>
-    <!-- json-smart 2.5.1 -->
+    
     <dependency>
       <groupId>net.minidev</groupId>
       <artifactId>json-smart</artifactId>
       <version>2.5.1</version>
       <exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions>
     </dependency>
-    <!-- Spring Framework 5.3.39 (replaces lib/ spring-*.jar) -->
+    
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-aop</artifactId>
@@ -2241,7 +2239,7 @@
       <version>5.3.39</version>
       <exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions>
     </dependency>
-    <!-- Spring Boot 2.7.18 (replaces lib/ spring-boot-*.jar) -->
+    
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot</artifactId>
@@ -2332,7 +2330,7 @@
       <version>2.7.18</version>
       <exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions>
     </dependency>
-    <!-- Spring Data 2.7.18 / 3.4.18 -->
+    
     <dependency>
       <groupId>org.springframework.data</groupId>
       <artifactId>spring-data-commons</artifactId>
@@ -2345,7 +2343,7 @@
       <version>3.4.18</version>
       <exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions>
     </dependency>
-    <!-- springdoc-openapi 1.8.0 -->
+    
     <dependency>
       <groupId>org.springdoc</groupId>
       <artifactId>springdoc-openapi-common</artifactId>
@@ -2370,28 +2368,28 @@
       <version>1.6.15</version>
       <exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions>
     </dependency>
-    <!-- commons-io 2.18.0 -->
+    
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
       <version>2.18.0</version>
       <exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions>
     </dependency>
-    <!-- commons-lang3 3.17.0 -->
+    
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
       <version>3.17.0</version>
       <exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions>
     </dependency>
-    <!-- reactor-core 3.4.38 -->
+    
     <dependency>
       <groupId>io.projectreactor</groupId>
       <artifactId>reactor-core</artifactId>
       <version>3.4.38</version>
       <exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions>
     </dependency>
-    <!-- micrometer 1.9.17 -->
+    
     <dependency>
       <groupId>io.micrometer</groupId>
       <artifactId>micrometer-core</artifactId>
@@ -2404,33 +2402,33 @@
       <version>1.9.17</version>
       <exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions>
     </dependency>
-    <!-- metrics-core 4.2.28 -->
+    
     <dependency>
       <groupId>io.dropwizard.metrics</groupId>
       <artifactId>metrics-core</artifactId>
       <version>4.2.28</version>
       <exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions>
     </dependency>
-    <!-- HdrHistogram 2.2.2 -->
+    
     <dependency>
       <groupId>org.hdrhistogram</groupId>
       <artifactId>HdrHistogram</artifactId>
       <version>2.2.2</version>
       <exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions>
     </dependency>
-    <!-- fontbox 2.0.32 -->
+    
     <dependency>
       <groupId>org.apache.pdfbox</groupId>
       <artifactId>fontbox</artifactId>
       <version>2.0.32</version>
       <exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions>
     </dependency>
-    <!-- classgraph 4.8.179 -->
+    
     <dependency>
       <groupId>io.github.classgraph</groupId>
       <artifactId>classgraph</artifactId>
       <version>4.8.179</version>
       <exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions>
     </dependency>
-  </dependencies>
+  <dependency><groupId>org.codehaus.mojo</groupId><artifactId>animal-sniffer-annotations</artifactId><version>1.21</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>org.jetbrains</groupId><artifactId>annotations</artifactId><version>26.0.2</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>com.google.android</groupId><artifactId>annotations</artifactId><version>4.1.1.4</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>commons-collections</groupId><artifactId>commons-collections</artifactId><version>3.2.2</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>com.github.docker-java</groupId><artifactId>docker-java-transport</artifactId><version>3.2.7</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>com.github.docker-java</groupId><artifactId>docker-java-transport-zerodep</artifactId><version>3.2.7</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>com.google.guava</groupId><artifactId>failureaccess</artifactId><version>1.0.1</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>io.grpc</groupId><artifactId>grpc-api</artifactId><version>1.53.0</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>net.devh</groupId><artifactId>grpc-client-spring-boot-autoconfigure</artifactId><version>2.14.0.RELEASE</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>net.devh</groupId><artifactId>grpc-client-spring-boot-starter</artifactId><version>2.14.0.RELEASE</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>net.devh</groupId><artifactId>grpc-common-spring-boot</artifactId><version>2.14.0.RELEASE</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>io.grpc</groupId><artifactId>grpc-context</artifactId><version>1.53.0</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>io.grpc</groupId><artifactId>grpc-core</artifactId><version>1.53.0</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>io.grpc</groupId><artifactId>grpc-netty-shaded</artifactId><version>1.53.0</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>io.grpc</groupId><artifactId>grpc-protobuf</artifactId><version>1.53.0</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>io.grpc</groupId><artifactId>grpc-protobuf-lite</artifactId><version>1.53.0</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>net.devh</groupId><artifactId>grpc-server-spring-boot-autoconfigure</artifactId><version>2.14.0.RELEASE</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>net.devh</groupId><artifactId>grpc-server-spring-boot-starter</artifactId><version>2.14.0.RELEASE</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>io.grpc</groupId><artifactId>grpc-services</artifactId><version>1.53.0</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>net.devh</groupId><artifactId>grpc-spring-boot-starter</artifactId><version>2.14.0.RELEASE</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>io.grpc</groupId><artifactId>grpc-stub</artifactId><version>1.53.0</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>org.apache.httpcomponents</groupId><artifactId>httpasyncclient</artifactId><version>4.1.5</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>org.apache.httpcomponents</groupId><artifactId>httpclient</artifactId><version>4.5.14</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>org.apache.httpcomponents.client5</groupId><artifactId>httpclient5</artifactId><version>5.2.1</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>org.apache.httpcomponents</groupId><artifactId>httpcore</artifactId><version>4.4.16</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>org.apache.httpcomponents</groupId><artifactId>httpcore-nio</artifactId><version>4.4.16</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>org.apache.httpcomponents.core5</groupId><artifactId>httpcore5</artifactId><version>5.2.4</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>org.apache.httpcomponents.core5</groupId><artifactId>httpcore5-h2</artifactId><version>5.2.4</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>cn.hutool</groupId><artifactId>hutool-captcha</artifactId><version>5.8.25</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>cn.hutool</groupId><artifactId>hutool-core</artifactId><version>5.8.25</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>one.gfw</groupId><artifactId>jakarta.annotation-api</artifactId><version>2.1.1</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>jakarta.servlet</groupId><artifactId>jakarta.servlet-api</artifactId><version>6.0.0</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>one.gfw</groupId><artifactId>javax.annotation-api</artifactId><version>1.3.2</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>javax.xml.bind</groupId><artifactId>jaxb-api-osgi-sources</artifactId><version>2.2</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>org.slf4j</groupId><artifactId>jcl-over-slf4j</artifactId><version>2.0.9</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>com.github.xiaoymin</groupId><artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId><version>4.5.0</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>com.esotericsoftware</groupId><artifactId>kryo</artifactId><version>5.5.0</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>org.apache.logging.log4j</groupId><artifactId>log4j-slf4j2-impl</artifactId><version>2.24.0</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>io.micrometer</groupId><artifactId>micrometer-commons</artifactId><version>1.12.1</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>io.micrometer</groupId><artifactId>micrometer-jakarta9</artifactId><version>1.12.1</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>io.micrometer</groupId><artifactId>micrometer-observation</artifactId><version>1.12.1</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>com.esotericsoftware</groupId><artifactId>minlog</artifactId><version>1.3.1</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>org.mongodb</groupId><artifactId>mongodb-driver-reactivestreams</artifactId><version>4.6.1</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>org.objenesis</groupId><artifactId>objenesis</artifactId><version>3.3</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>io.perfmark</groupId><artifactId>perfmark-api</artifactId><version>0.25.0</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>com.google.api.grpc</groupId><artifactId>proto-google-common-protos</artifactId><version>2.9.0</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>com.google.protobuf</groupId><artifactId>protobuf-java</artifactId><version>3.22.5</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>com.google.protobuf</groupId><artifactId>protobuf-java-util</artifactId><version>3.22.5</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>com.esotericsoftware</groupId><artifactId>reflectasm</artifactId><version>1.11.9</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>org.reflections</groupId><artifactId>reflections</artifactId><version>0.10.2</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>io.reactivex.rxjava2</groupId><artifactId>rxjava</artifactId><version>2.2.21</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>org.apache.shiro</groupId><artifactId>shiro-crypto-hash</artifactId><version>1.13.0</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>org.slf4j</groupId><artifactId>slf4j-api</artifactId><version>2.0.9</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>org.springframework.boot</groupId><artifactId>spring-boot-loader</artifactId><version>3.2.1</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>org.springframework</groupId><artifactId>spring-context-indexer</artifactId><version>6.1.2</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>org.springdoc</groupId><artifactId>springdoc-openapi-starter-common</artifactId><version>2.3.0</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>org.springdoc</groupId><artifactId>springdoc-openapi-starter-webmvc-api</artifactId><version>2.3.0</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>org.springdoc</groupId><artifactId>springdoc-openapi-starter-webmvc-ui</artifactId><version>2.3.0</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>javax.xml.stream</groupId><artifactId>stax-api</artifactId><version>1.0-2</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>io.swagger.core.v3</groupId><artifactId>swagger-annotations-jakarta</artifactId><version>2.2.19</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>io.swagger.core.v3</groupId><artifactId>swagger-core-jakarta</artifactId><version>2.2.19</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>io.swagger.core.v3</groupId><artifactId>swagger-models-jakarta</artifactId><version>2.2.19</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency><dependency><groupId>org.apache.velocity</groupId><artifactId>velocity-engine-core</artifactId><version>2.3</version><exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions></dependency></dependencies>
 </project>
