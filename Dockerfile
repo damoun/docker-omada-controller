@@ -1,11 +1,11 @@
-FROM maven:alpine@sha256:16691dc7e18e5311ee7ae38b40dcf98ee1cfe4a487fdd0e57bfef76a0415034a as build
+FROM maven:3.9-eclipse-temurin-17@sha256:a0603aab698040d9c94259f379ec0487da1678560748d6c7508483034033c53d as build
 
 COPY pom.xml .
 
 RUN mvn dependency:copy-dependencies
 RUN mvn dependency:tree
 
-FROM openjdk:22-jdk-slim-bullseye@sha256:32dcd71705a0e74b3b83d93294afb70c6eb57cf694ccb8dd558724d744bc098d
+FROM eclipse-temurin:17-jre-jammy@sha256:1dd80d55af5f5ddb9cbd0b119f5a396058aa34909ee6abea601ac8cd5b09487a
 
 RUN mkdir -p /opt/tplink/EAPController/logs
 RUN mkdir -p /opt/tplink/EAPController/data/keystore
