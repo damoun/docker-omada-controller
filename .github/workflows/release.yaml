@@ -72,11 +72,14 @@ jobs:
         run: |
           bash scripts/extract-omada.sh omada.tar.gz extracted-jars
 
-      - name: Replace lib/ JARs
+      - name: Sync deps (Maven Central → pom.xml, proprietary → lib/)
         if: steps.version_check.outputs.skip == 'false'
         run: |
+          bash scripts/sync-deps.sh extracted-jars/
           rm -f lib/*.jar
-          cp extracted-jars/*.jar lib/
+          while IFS= read -r jar_path; do
+            cp "$jar_path" lib/
+          done < lib-keep.txt
 
       - name: Update version in pom.xml
         if: steps.version_check.outputs.skip == 'false'
