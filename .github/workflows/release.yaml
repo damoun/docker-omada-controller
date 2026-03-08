@@ -10,12 +10,14 @@ on:
         required: false
         default: ''
 
-permissions:
-  contents: write
-
 jobs:
   release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      version: ${{ steps.check.outputs.version }}
+      skip: ${{ steps.version_check.outputs.skip }}
 
     steps:
       - name: Checkout repository
@@ -123,3 +125,13 @@ jobs:
             args+=(release-notes.pdf)
           fi
           gh release create "${args[@]}"
+
+  docker:
+    needs: release
+    if: needs.release.outputs.skip == 'false'
+    uses: ./.github/workflows/docker.yaml
+    with:
+      version: ${{ needs.release.outputs.version }}
+    permissions:
+      contents: read
+      packages: write
