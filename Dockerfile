@@ -1,4 +1,4 @@
-FROM maven:3.9-eclipse-temurin-17-alpine@sha256:daba549390631041b8660d350de7f0e30a5ee79074f25656be2c768d591ac63b as build
+FROM maven:3.9-eclipse-temurin-17@sha256:a0603aab698040d9c94259f379ec0487da1678560748d6c7508483034033c53d as build
 
 COPY pom.xml .
 
