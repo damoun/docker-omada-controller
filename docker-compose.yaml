@@ -9,6 +9,13 @@ services:
     cap_add:
       - NET_RAW
       - NET_BIND_SERVICE
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /opt/tplink/EAPController/logs
+      - /opt/tplink/EAPController/data/keystore
+      - /opt/tplink/EAPController/data/pdf
+      - /opt/tplink/EAPController/data/autobackup
     ports:
       - 8088:8088
       - 8043:8043
