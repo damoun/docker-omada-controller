@@ -7,17 +7,21 @@ RUN mvn dependency:tree
 
 FROM eclipse-temurin:17-jre-jammy@sha256:1dd80d55af5f5ddb9cbd0b119f5a396058aa34909ee6abea601ac8cd5b09487a
 
-RUN mkdir -p /opt/tplink/EAPController/logs
-RUN mkdir -p /opt/tplink/EAPController/data/keystore
-RUN mkdir /opt/tplink/EAPController/data/pdf
-RUN mkdir /opt/tplink/EAPController/data/autobackup
-RUN ln -s /dev/stdout /opt/tplink/EAPController/logs/server.log
+RUN groupadd -r -g 1000 omada && useradd -r -u 1000 -g omada -s /sbin/nologin omada && \
+    mkdir -p /opt/tplink/EAPController/logs \
+             /opt/tplink/EAPController/data/keystore \
+             /opt/tplink/EAPController/data/pdf \
+             /opt/tplink/EAPController/data/autobackup && \
+    ln -s /dev/stdout /opt/tplink/EAPController/logs/server.log && \
+    rm -rf /var/lib/apt/lists/*
 
 COPY lib /opt/tplink/EAPController/lib
 COPY --from=build target/dependency /opt/tplink/EAPController/lib
 COPY entrypoint.sh /opt/tplink/EAPController/
 COPY properties /opt/tplink/EAPController/properties
 COPY data /opt/tplink/EAPController/data
+
+RUN chown -R omada:omada /opt/tplink/EAPController
 
 WORKDIR /opt/tplink/EAPController/data
 
@@ -34,5 +38,7 @@ ENV OMADA_PORT_MANAGER_V1 29811
 ENV OMADA_PORT_MANAGER_V2 29814
 ENV OMADA_PORT_RTTY 29816
 ENV OMADA_PORT_APP_DISCOVERY 27001
+
+USER omada
 
 CMD [ "/opt/tplink/EAPController/entrypoint.sh" ]
