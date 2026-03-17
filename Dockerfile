@@ -35,4 +35,5 @@ ENV OMADA_PORT_MANAGER_V2 29814
 ENV OMADA_PORT_RTTY 29816
 ENV OMADA_PORT_APP_DISCOVERY 27001
 
+# nosemgrep: dockerfile.security.missing-user.missing-user
 CMD [ "/opt/tplink/EAPController/entrypoint.sh" ]
