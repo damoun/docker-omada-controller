@@ -15,6 +15,10 @@ on:
         required: false
         type: boolean
         default: false
+      lib_url:
+        description: 'URL to lib.tar.gz release asset containing proprietary JARs'
+        required: true
+        type: string
 
 env:
   REGISTRY: ghcr.io
@@ -59,3 +63,5 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            LIB_URL=${{ inputs.lib_url }}

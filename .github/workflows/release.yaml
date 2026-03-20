@@ -19,6 +19,7 @@ jobs:
       version: ${{ steps.check.outputs.version }}
       skip: ${{ steps.version_check.outputs.skip }}
       is_latest: ${{ steps.is_latest.outputs.value }}
+      lib_url: ${{ steps.lib_asset.outputs.url }}
 
     steps:
       - name: Checkout repository
@@ -74,10 +75,11 @@ jobs:
         if: steps.version_check.outputs.skip == 'false'
         run: |
           bash scripts/sync-deps.sh extracted-jars/
-          rm -f lib/*.jar
+          mkdir -p lib-staging
           while IFS= read -r jar_path; do
-            cp "$jar_path" lib/
+            cp "$jar_path" lib-staging/
           done < lib-keep.txt
+          tar -czf lib.tar.gz -C lib-staging .
 
       - name: Update version in pom.xml
         if: steps.version_check.outputs.skip == 'false'
@@ -95,7 +97,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}"
-          git add lib/ pom.xml properties/ data/
+          git add pom.xml properties/ data/
           git commit -m "chore: upgrade omada-controller to ${NEW_VERSION}"
           git tag "v${NEW_VERSION}"
           git push origin main
@@ -133,11 +135,22 @@ jobs:
             "v${NEW_VERSION}"
             --title "v${NEW_VERSION}"
             --notes-file release_body.txt
+            lib.tar.gz
           )
           if [[ -f release-notes.pdf ]]; then
             args+=(release-notes.pdf)
           fi
           gh release create "${args[@]}"
+
+      - name: Get lib asset URL
+        if: steps.version_check.outputs.skip == 'false'
+        id: lib_asset
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NEW_VERSION: ${{ steps.check.outputs.version }}
+        run: |
+          url=$(gh release view "v${NEW_VERSION}" --json assets --jq '.assets[] | select(.name == "lib.tar.gz") | .url')
+          echo "url=${url}" >> "$GITHUB_OUTPUT"
 
   docker:
     needs: release
@@ -146,6 +159,7 @@ jobs:
     with:
       version: ${{ needs.release.outputs.version }}
       latest: ${{ needs.release.outputs.is_latest == 'true' }}
+      lib_url: ${{ needs.release.outputs.lib_url }}
     permissions:
       contents: read
       packages: write
