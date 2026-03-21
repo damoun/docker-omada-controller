@@ -146,11 +146,9 @@ jobs:
         if: steps.version_check.outputs.skip == 'false'
         id: lib_asset
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NEW_VERSION: ${{ steps.check.outputs.version }}
         run: |
-          url=$(gh release view "v${NEW_VERSION}" --json assets --jq '.assets[] | select(.name == "lib.tar.gz") | .url')
-          echo "url=${url}" >> "$GITHUB_OUTPUT"
+          echo "url=https://github.com/${{ github.repository }}/releases/download/v${NEW_VERSION}/lib.tar.gz" >> "$GITHUB_OUTPUT"
 
   docker:
     needs: release
