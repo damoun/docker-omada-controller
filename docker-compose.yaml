@@ -1,6 +1,9 @@
 services:
   omada:
-    build: .
+    build:
+      context: .
+      args:
+        LIB_URL: https://github.com/damoun/docker-omada-controller/releases/download/v6.1.0.19/lib.tar.gz
     depends_on:
       - mongo
     environment:
@@ -12,6 +15,6 @@ services:
       - 8843:8843
       - 30001:30001/udp
   mongo:
-    image: mongo:5.0.17
+    image: mongo:8.0
     ports:
       - '27017:27017'

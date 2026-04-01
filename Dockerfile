@@ -1,18 +1,18 @@
-FROM debian:bookworm-slim@sha256:5724d3aa12d3e4e5cc3c1ef4b1a4a396c5bfd1c29dcf8ab02c0fe6e7df354146 AS download
+FROM debian:bookworm-slim@sha256:f06537653ac770703bc45b4b113475bd402f451e85223f0f2837acbf89ab020a AS download
 
 ARG LIB_URL
 RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates && rm -rf /var/lib/apt/lists/*
 RUN mkdir -p /lib-jars && \
     curl -fsSL "${LIB_URL}" | tar -xz -C /lib-jars
 
-FROM maven:3.9-eclipse-temurin-17@sha256:a0603aab698040d9c94259f379ec0487da1678560748d6c7508483034033c53d AS build
+FROM maven:3.9-eclipse-temurin-17@sha256:39a5260d49fe20e5f407bf63f63a267d9870965bcd1d114e52e1e50ba1c55a32 AS build
 
 COPY pom.xml .
 
 RUN mvn dependency:copy-dependencies
 RUN mvn dependency:tree
 
-FROM eclipse-temurin:17-jre-jammy@sha256:1dd80d55af5f5ddb9cbd0b119f5a396058aa34909ee6abea601ac8cd5b09487a
+FROM eclipse-temurin:17-jre-jammy@sha256:59188078929e9b65a62fa325bbbbf76f5491d99d1500f1beebce86f1cec05a84
 
 RUN mkdir -p /opt/tplink/EAPController/logs
 RUN mkdir -p /opt/tplink/EAPController/data/keystore
