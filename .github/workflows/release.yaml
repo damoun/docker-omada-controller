@@ -37,11 +37,9 @@ jobs:
         id: version_check
         env:
           NEW_VERSION: ${{ steps.check.outputs.version }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          current_version=$(sed -n '9p' pom.xml | grep -oE '[0-9]+(\.[0-9]+)+' || true)
-          echo "current_version=$current_version"
-          echo "new_version=$NEW_VERSION"
-          if [[ "$current_version" == "$NEW_VERSION" ]]; then
+          if gh release view "v${NEW_VERSION}" &>/dev/null; then
             echo "skip=true" >> "$GITHUB_OUTPUT"
           else
             echo "skip=false" >> "$GITHUB_OUTPUT"
@@ -52,7 +50,9 @@ jobs:
         env:
           NEW_VERSION: ${{ steps.check.outputs.version }}
         run: |
-          latest_version=$(curl -fsSL https://support.omadanetworks.com/us/download/software/omada-controller/             | grep -oE 'href="https://static\.tp-link\.com/upload/software/[^"]+_linux_x64_[^"]+\.tar\.gz"'             | head -1 | grep -oE 'v[0-9]+(\.[0-9]+)+' | head -1 | tr -d v || true)
+          latest_version=$(curl -fsSL https://support.omadanetworks.com/us/download/software/omada-controller/ \
+            | grep -oE 'href="https://static\.tp-link\.com/upload/software/[^"]+_linux_x64_[^"]+\.tar\.gz"' \
+            | head -1 | grep -oE 'v[0-9]+(\.[0-9]+)+' | head -1 | tr -d v || true)
           if [[ "$NEW_VERSION" == "$latest_version" ]]; then
             echo "value=true" >> "$GITHUB_OUTPUT"
           else
@@ -63,30 +63,26 @@ jobs:
         if: steps.version_check.outputs.skip == 'false'
         env:
           DOWNLOAD_URL: ${{ steps.check.outputs.download_url }}
-        run: |
-          curl -fsSL -o omada.tar.gz "$DOWNLOAD_URL"
+        run: curl -fsSL -o omada.tar.gz "$DOWNLOAD_URL"
 
-      - name: Extract JARs
+      - name: Extract JARs, properties, and data
         if: steps.version_check.outputs.skip == 'false'
         run: |
-          bash scripts/extract-omada.sh omada.tar.gz extracted-jars
+          work_dir=$(mktemp -d)
+          tar -xzf omada.tar.gz -C "$work_dir"
+          root_dir=$(find "$work_dir" -mindepth 1 -maxdepth 1 -type d | head -1)
 
-      - name: Sync deps (Maven Central -> pom.xml, proprietary -> lib/)
-        if: steps.version_check.outputs.skip == 'false'
-        run: |
-          bash scripts/sync-deps.sh extracted-jars/
-          mkdir -p lib-staging
-          while IFS= read -r jar_path; do
-            cp "$jar_path" lib-staging/
-          done < lib-keep.txt
-          tar -czf lib.tar.gz -C lib-staging .
+          # Package all JARs from the release into lib.tar.gz
+          tar -czf lib.tar.gz -C "$root_dir/lib" .
 
-      - name: Update version in pom.xml
-        if: steps.version_check.outputs.skip == 'false'
-        env:
-          NEW_VERSION: ${{ steps.check.outputs.version }}
-        run: |
-          sed -i "9s|<version>.*</version>|<version>${NEW_VERSION}</version>|" pom.xml
+          # Sync properties/ and data/ into the repo
+          for dir in properties data; do
+            if [[ -d "$root_dir/$dir" ]]; then
+              rsync -a --delete "$root_dir/$dir/" "$dir/"
+            fi
+          done
+
+          rm -rf "$work_dir"
 
       - name: Commit and tag
         if: steps.version_check.outputs.skip == 'false'
@@ -97,7 +93,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}"
-          git add pom.xml properties/ data/
+          git add properties/ data/
           git diff --cached --quiet && echo "Nothing to commit, skipping" || git commit -m "chore: upgrade omada-controller to ${NEW_VERSION}"
           git tag "v${NEW_VERSION}" 2>/dev/null || echo "Tag v${NEW_VERSION} already exists, skipping"
           git push origin main
@@ -107,8 +103,7 @@ jobs:
         if: steps.version_check.outputs.skip == 'false' && steps.check.outputs.release_notes_url != ''
         env:
           RELEASE_NOTES_URL: ${{ steps.check.outputs.release_notes_url }}
-        run: |
-          curl -fsSL -o release-notes.pdf "$RELEASE_NOTES_URL"
+        run: curl -fsSL -o release-notes.pdf "$RELEASE_NOTES_URL"
 
       - name: Extract release notes text
         if: steps.version_check.outputs.skip == 'false'

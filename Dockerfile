@@ -5,13 +5,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certifi
 RUN mkdir -p /lib-jars && \
     curl -fsSL "${LIB_URL}" | tar -xz -C /lib-jars
 
-FROM maven:3.9-eclipse-temurin-17@sha256:39a5260d49fe20e5f407bf63f63a267d9870965bcd1d114e52e1e50ba1c55a32 AS build
-
-COPY pom.xml .
-
-RUN mvn dependency:copy-dependencies
-RUN mvn dependency:tree
-
 FROM eclipse-temurin:17-jre-jammy@sha256:59188078929e9b65a62fa325bbbbf76f5491d99d1500f1beebce86f1cec05a84
 
 RUN mkdir -p /opt/tplink/EAPController/logs
@@ -21,7 +14,6 @@ RUN mkdir /opt/tplink/EAPController/data/autobackup
 RUN ln -s /dev/stdout /opt/tplink/EAPController/logs/server.log
 
 COPY --from=download /lib-jars /opt/tplink/EAPController/lib
-COPY --from=build target/dependency /opt/tplink/EAPController/lib
 COPY entrypoint.sh /opt/tplink/EAPController/
 COPY properties /opt/tplink/EAPController/properties
 COPY data /opt/tplink/EAPController/data
