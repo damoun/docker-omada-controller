@@ -98,10 +98,10 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}"
           git add pom.xml properties/ data/
-          git commit -m "chore: upgrade omada-controller to ${NEW_VERSION}"
-          git tag "v${NEW_VERSION}"
+          git diff --cached --quiet && echo "Nothing to commit, skipping" || git commit -m "chore: upgrade omada-controller to ${NEW_VERSION}"
+          git tag "v${NEW_VERSION}" 2>/dev/null || echo "Tag v${NEW_VERSION} already exists, skipping"
           git push origin main
-          git push origin "v${NEW_VERSION}"
+          git push origin "v${NEW_VERSION}" || echo "Tag v${NEW_VERSION} already pushed, skipping"
 
       - name: Download release notes PDF
         if: steps.version_check.outputs.skip == 'false' && steps.check.outputs.release_notes_url != ''
@@ -131,16 +131,20 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NEW_VERSION: ${{ steps.check.outputs.version }}
         run: |
-          args=(
-            "v${NEW_VERSION}"
-            --title "v${NEW_VERSION}"
-            --notes-file release_body.txt
-            lib.tar.gz
-          )
-          if [[ -f release-notes.pdf ]]; then
-            args+=(release-notes.pdf)
+          if gh release view "v${NEW_VERSION}" &>/dev/null; then
+            gh release upload "v${NEW_VERSION}" lib.tar.gz --clobber
+          else
+            args=(
+              "v${NEW_VERSION}"
+              --title "v${NEW_VERSION}"
+              --notes-file release_body.txt
+              lib.tar.gz
+            )
+            if [[ -f release-notes.pdf ]]; then
+              args+=(release-notes.pdf)
+            fi
+            gh release create "${args[@]}"
           fi
-          gh release create "${args[@]}"
 
       - name: Get lib asset URL
         if: steps.version_check.outputs.skip == 'false'
