@@ -26,6 +26,6 @@ java \
     -Dport.manager.v2="${OMADA_PORT_MANAGER_V2}" \
     -Dport.rtty="${OMADA_PORT_RTTY}" \
     -Dport.app.discovery="${OMADA_PORT_APP_DISCOVERY}" \
-    -Dmanagement.prometheus.metrics.export.enabled=false \
+    -Dmanagement.prometheus.metrics.export.enabled=true \
     -cp "/usr/share/java/commons-daemon.jar:${OMADA_HOME}/dependency/*:${OMADA_HOME}/lib/*:${OMADA_HOME}/properties" \
     com.tplink.smb.omada.starter.OmadaLinuxMain
