@@ -7,10 +7,10 @@ RUN mkdir -p /lib-jars && \
 
 FROM eclipse-temurin:17-jre-jammy@sha256:59188078929e9b65a62fa325bbbbf76f5491d99d1500f1beebce86f1cec05a84
 
-RUN mkdir -p /opt/tplink/EAPController/logs
-RUN mkdir -p /opt/tplink/EAPController/data/keystore
-RUN mkdir /opt/tplink/EAPController/data/pdf
-RUN mkdir /opt/tplink/EAPController/data/autobackup
+RUN mkdir -p /opt/tplink/EAPController/logs \
+        /opt/tplink/EAPController/data/keystore \
+        /opt/tplink/EAPController/data/pdf \
+        /opt/tplink/EAPController/data/autobackup
 RUN ln -s /dev/stdout /opt/tplink/EAPController/logs/server.log
 
 COPY --from=download /lib-jars /opt/tplink/EAPController/lib

@@ -70,7 +70,7 @@ jobs:
         run: |
           work_dir=$(mktemp -d)
           tar -xzf omada.tar.gz -C "$work_dir"
-          root_dir=$(find "$work_dir" -mindepth 1 -maxdepth 1 -type d | head -1)
+          root_dir=$(echo "$work_dir"/*/)
 
           # Package all JARs from the release into lib.tar.gz
           tar -czf lib.tar.gz -C "$root_dir/lib" .
