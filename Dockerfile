@@ -7,6 +7,8 @@ RUN mkdir -p /lib-jars && \
 
 FROM eclipse-temurin:17-jre-jammy@sha256:59188078929e9b65a62fa325bbbbf76f5491d99d1500f1beebce86f1cec05a84
 
+RUN apt-get update && apt-get install -y --no-install-recommends libcommons-daemon-java && rm -rf /var/lib/apt/lists/*
+
 RUN mkdir -p /opt/tplink/EAPController/logs \
         /opt/tplink/EAPController/data/keystore \
         /opt/tplink/EAPController/data/pdf \
