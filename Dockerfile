@@ -1,27 +1,21 @@
-FROM debian:bookworm-slim@sha256:5724d3aa12d3e4e5cc3c1ef4b1a4a396c5bfd1c29dcf8ab02c0fe6e7df354146 AS download
+FROM debian:bookworm-slim@sha256:f06537653ac770703bc45b4b113475bd402f451e85223f0f2837acbf89ab020a AS download
 
 ARG LIB_URL
 RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates && rm -rf /var/lib/apt/lists/*
 RUN mkdir -p /lib-jars && \
     curl -fsSL "${LIB_URL}" | tar -xz -C /lib-jars
 
-FROM maven:3.9-eclipse-temurin-17@sha256:a0603aab698040d9c94259f379ec0487da1678560748d6c7508483034033c53d AS build
+FROM eclipse-temurin:17-jre-jammy@sha256:59188078929e9b65a62fa325bbbbf76f5491d99d1500f1beebce86f1cec05a84
 
-COPY pom.xml .
+RUN apt-get update && apt-get install -y --no-install-recommends libcommons-daemon-java && rm -rf /var/lib/apt/lists/*
 
-RUN mvn dependency:copy-dependencies
-RUN mvn dependency:tree
-
-FROM eclipse-temurin:17-jre-jammy@sha256:1dd80d55af5f5ddb9cbd0b119f5a396058aa34909ee6abea601ac8cd5b09487a
-
-RUN mkdir -p /opt/tplink/EAPController/logs
-RUN mkdir -p /opt/tplink/EAPController/data/keystore
-RUN mkdir /opt/tplink/EAPController/data/pdf
-RUN mkdir /opt/tplink/EAPController/data/autobackup
+RUN mkdir -p /opt/tplink/EAPController/logs \
+        /opt/tplink/EAPController/data/keystore \
+        /opt/tplink/EAPController/data/pdf \
+        /opt/tplink/EAPController/data/autobackup
 RUN ln -s /dev/stdout /opt/tplink/EAPController/logs/server.log
 
 COPY --from=download /lib-jars /opt/tplink/EAPController/lib
-COPY --from=build target/dependency /opt/tplink/EAPController/lib
 COPY entrypoint.sh /opt/tplink/EAPController/
 COPY properties /opt/tplink/EAPController/properties
 COPY data /opt/tplink/EAPController/data
