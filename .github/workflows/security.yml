@@ -9,7 +9,7 @@ on:
 
 jobs:
   security:
-    uses: damoun/.github/.github/workflows/security.yml@d2685ca401b760ab8b62406364eb263cc9b6fdb1 # main
+    uses: damoun/.github/.github/workflows/security.yml@f95c8f2f44951cf9126e66c062c7c0ca3de7762a # main
     permissions:
       contents: read
       security-events: write
