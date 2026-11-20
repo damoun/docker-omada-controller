@@ -15,6 +15,6 @@ services:
       - 8843:8843
       - 30001:30001/udp
   mongo:
-    image: mongo:8.0
+    image: mongo:8.0@sha256:479e85ced54ffb8a40dade1dcde2da2a9ae858515b9415e9cc54bfb8f0575d01
     ports:
       - '27017:27017'
