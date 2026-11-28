@@ -5,7 +5,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certifi
 RUN mkdir -p /lib-jars && \
     curl -fsSL "${LIB_URL}" | tar -xz -C /lib-jars
 
-FROM eclipse-temurin:17-jre-jammy@sha256:59188078929e9b65a62fa325bbbbf76f5491d99d1500f1beebce86f1cec05a84
+FROM eclipse-temurin:17-jre-jammy@sha256:c6a5dd70fb24f4e07ef88cbda8efb613a5a649a1af071a41de8eaabd1ee6b5da
 
 RUN apt-get update && apt-get install -y --no-install-recommends libcommons-daemon-java && rm -rf /var/lib/apt/lists/*
 
